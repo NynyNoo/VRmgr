@@ -77,25 +77,6 @@ public class MoveController : MonoBehaviour
     {
         startPos = data;
     }
-    /*void ProcessData(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
-        var a = (attitude);
-        additional.x = a.y; 
-        additional.z=a.z;
-        additional.y = a.x;
-        
-        if (first)
-        {
-            additional2 = additional - muscleObject.transform.rotation.eulerAngles;
-            first = false;
-        }
-        
-        muscleObject.transform.rotation = Quaternion.Euler(additional-additional2);
-        text1.text = attitude.ToString();
-        // Ustawienie nowej orientacji obiektu na podstawie ró¿nicy
-        //muscleObject.transform.rotation = attitude*Quaternion.Inverse(relativeRotation);
-    }*/
     void ProcessData14(string data)
     {
         (_, _, attitude, _) = converter.ParseData(data);
@@ -124,22 +105,7 @@ public class MoveController : MonoBehaviour
     }
     private Quaternion rightCoordToUnityCord( Quaternion q)
     {
-        //return new Quaternion(q.x, q.z, -q.y, -q.w);
-        //return new Quaternion(q.x, q.z, -q.y, -q.w);
-        //return new Quaternion(-q.x, -q.z, q.y, q.w);
-
-
-
-        return new Quaternion(-q.x, -q.z, q.y, q.w);
-        //tut
-        //return new Quaternion(q.x, q.z, -q.y, -q.w);
-
-
-        //return new Quaternion(-q.x, q.z, -q.y, -q.w);
-        //w=jest po to by nie bylo za latwo
-        //3=gora-dol
-        //2=obrot w prawo/lewo
-        //1=prawo-lewo
+        return new Quaternion(-q.x, q.z, -q.y, -q.w);
     }
     void ProcessData(string data)
     {
@@ -154,45 +120,6 @@ public class MoveController : MonoBehaviour
         muscleObject.transform.rotation = attitude * relativeRotation;
         text1.text = attitude.ToString();
     }
-    void ProcessData9(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
-        // Tworzenie kwaternionu reprezentuj¹cego obrót o 90 stopni wokó³ osi X
-        rotation90X = Quaternion.Euler(90f, 0f, 0f);
-        //Quaternion rotationSwap = Quaternion.Euler(90f, 0f, -90f);
-        // Obrót oryginalnej orientacji o 90 stopni wokó³ osi X
-        rotatedAttitude = rotation90X * attitude;
-
-        if (first)
-        {
-
-            // Obrót wzglêdny - obrót o 90 stopni wokó³ osi X
-            relativeRotation = Quaternion.Inverse(rotatedAttitude) * muscleObject.transform.rotation;
-            first = false;
-        }
-
-        // Obrót wzglêdem orientacji
-        muscleObject.transform.rotation = rotatedAttitude * relativeRotation;
-
-        // Aktualizacja tekstu
-        text1.text = rotatedAttitude.ToString();
-    }
-    void ProcessData3(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
-        var a = attitude.eulerAngles;
-        var b = Quaternion.Euler(-a.z,-a.y,0);
-        if (first)
-        {
-            relativeRotation = Quaternion.Inverse(b) * muscleObject.transform.rotation;
-            first = false;
-        }
-        muscleObject.transform.rotation = b * relativeRotation;
-        text1.text = attitude.ToString();
-        // Ustawienie nowej orientacji obiektu na podstawie ró¿nicy
-        //muscleObject.transform.rotation = attitude*Quaternion.Inverse(relativeRotation);
-    }
-
     void SetupRB()
     {
         
