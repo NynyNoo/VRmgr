@@ -47,17 +47,17 @@ public class DataConnector : MonoBehaviour
                 {
                     DataSentToPort12346(data);
                     break;
-                }
+                };
             case 12347:
                 {
                     DataSentToPort12347(data);
                     break;
-                }
+                };
             case 12348:
                 {
                     DataSentToPort12348(data);
                     break;
-                }
+                };
             default:
                 Debug.LogError($"Invalid port number: {port}");
                 break;

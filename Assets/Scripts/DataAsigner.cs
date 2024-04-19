@@ -74,15 +74,7 @@ public class DataAsigner : MonoBehaviour
             first = false;
         }
         Vector3 accFixed = accelerometer - FirstData;
-        //accFixed.x = (float)Math.Round(accFixed.x, 2);
-       /* if (Mathf.Abs(accFixed.x) > 0.03f || Mathf.Abs(accFixed.y) > 0.03f || Mathf.Abs(accFixed.z) > 0.03f)
-        {
-            characterController.Move(accFixed);
-            //rb.AddForce(accFixed*200, ForceMode.Acceleration);
-
-        }*/
         Move(accFixed);
-        //LookAround(gyroscope);
         text1.text = (accFixed.ToString());
         text2.text = (rb.velocity.ToString());
     }
@@ -94,33 +86,5 @@ public class DataAsigner : MonoBehaviour
         Vector3 transformedDirection = transform.TransformDirection(moveDirection);
 
         characterController.Move(transformedDirection);
-    }
-    private void LookAround(Vector3 gyros)
-    {
-        Quaternion attitude = new Quaternion(0,0,0,0);
-
-        transform.rotation = attitude;
-        transform.Rotate(0f, 0f, 180f, Space.Self);
-        transform.Rotate(90f, 180f, 0f, Space.World);
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, transform.rotation, 0.1f);
-    }
-    void safe()
-    {
-        var accFixed = accelerometer;
-        accFixed.z -= 1.02f;
-        accFixed.x += 0.01f;
-        counter += accFixed;
-        text1.text = (counter.ToString());
-
-        counter += accFixed;
-        text2.text = (accFixed.ToString());
-        //text1.text = (accFixed.ToString());
-        rb.AddForce(accFixed, ForceMode.Acceleration);
-    }
-    void SaveFirstData(Vector3 data)
-    {
-        FirstData = data;
-        first = false;
     }
 }

@@ -11,140 +11,124 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class MoveController : MonoBehaviour
 {
     [SerializeField] int portNumber;
-    [SerializeField] float x,y,z,w;
     [SerializeField] TextMeshProUGUI text1;
-    [SerializeField] TextMeshProUGUI text2;
     [SerializeField] GameObject muscleObject;
     DataConnector dataConnector;
+    int counter;
     DataConverter converter;
-    Vector3 accelerometer;
-    Vector3 gyroscope;
-    Vector3 additional;
-    Vector3 additional2;
     Quaternion attitude;
-    Quaternion firstQua;
-    Quaternion d;
     Quaternion relativeRotation;
-    DateTime timestamp;
-    Quaternion rot = new Quaternion(1, 1, 1, 1);
-    Quaternion startPos = new Quaternion(0, 0, 0, 0);
-    Quaternion rotation90X;
-    Quaternion rotatedAttitude;
-    Rigidbody rb;
-    Vector3 acce = Vector3.zero;
-    Vector3 counter = new (0,0,0);
-    Vector3 counter2 = new (0,0,0);
-    Vector3 FirstData = new (0,0,0);
-    CharacterController characterController;
     bool first = true;
-    public float minChangeThreshold = 0.05f; // Minimalna wartoœæ zmiany, poni¿ej której nie bêdzie dodawana si³a
-    public float forceMultiplier = 300f; // Wspó³czynnik mno¿¹cy si³ê
-    private void Update()
-    {
-    }
+    string sensorName;
+    float timer = 0.0f;
+    int seconds;
+    Quaternion startingRotation;
+    Quaternion startingPhoneRotation;
+    Quaternion startingPlayerRotation;
     private void Start()
     {
-        //SetupRB();
-        rb=GetComponent<Rigidbody>();
+        counter = 0;
         dataConnector = GetComponent<DataConnector>();
         converter = new DataConverter();
         Subscribe(portNumber);
     }
 
-
+    void Update()
+    {
+        if (!first)
+        {
+            timer += Time.deltaTime;
+            seconds = Convert.ToInt32(timer % 60);
+            if (seconds > 5)
+                ResetText();
+        }
+    }
     private void Subscribe(int port)
     {
         switch (port)
         {
             case 12345:
                 DataConnector.Instance.DataSentToPort12345 += ProcessData;
+                sensorName = "LeftTop ";
                 break;
             case 12346:
-                DataConnector.Instance.DataSentToPort12345 += ProcessData;
+                DataConnector.Instance.DataSentToPort12346 += ProcessData;
+                sensorName = "LeftDown ";
                 break;
             case 12347:
-                DataConnector.Instance.DataSentToPort12345 += ProcessData;
+                DataConnector.Instance.DataSentToPort12347 += ProcessData;
+                sensorName = "RightTop ";
                 break;
             case 12348:
-                DataConnector.Instance.DataSentToPort12345 += ProcessData;
+                DataConnector.Instance.DataSentToPort12348 += ProcessData;
+                sensorName = "RightDown ";
                 break;
             default:
                 Debug.LogError($"Invalid port number: {port}");
                 break;
         }
     }
-    void setStart(Quaternion data)
-    {
-        startPos = data;
-    }
-    void ProcessData14(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
-        if (first)
-        {
-            relativeRotation = Quaternion.Inverse(attitude) * muscleObject.transform.rotation;
-            first = false;
-        }
-        muscleObject.transform.rotation = attitude * Quaternion.Inverse(relativeRotation);
-        text1.text = attitude.ToString();
-        // Ustawienie nowej orientacji obiektu na podstawie ró¿nicy
-        //muscleObject.transform.rotation = attitude*Quaternion.Inverse(relativeRotation);
-    }
-    void ProcessData8(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
 
-        if (first)
-        {
-            relativeRotation = Quaternion.Inverse(attitude) * muscleObject.transform.rotation;
-            first = false;
-        }
-
-        muscleObject.transform.rotation = attitude * relativeRotation;
-        text1.text = attitude.ToString();
-    }
     private Quaternion rightCoordToUnityCord( Quaternion q)
     {
+        //ustawienie orientacji telefonu wzglêdem nogi
+        return new Quaternion(-q.y, q.x, -q.z, -q.w);
+    }
+    private Quaternion rightCoordToUnityCord3(Quaternion q)
+    {
+        //ustawienie orientacji telefonu wzglêdem nogi
         return new Quaternion(-q.x, q.z, -q.y, -q.w);
     }
     void ProcessData(string data)
     {
         (_, _, attitude, _) = converter.ParseData(data);
         attitude = rightCoordToUnityCord(attitude);
+
         if (first)
         {
+            startingPhoneRotation = attitude;
+            startingPlayerRotation = muscleObject.transform.rotation;
+            first = false;
+        }
+
+        // Obliczenie ró¿nicy miêdzy pocz¹tkow¹ orientacj¹ telefonu a aktualn¹ orientacj¹
+        Quaternion relativeRotation = Quaternion.Inverse(startingPhoneRotation) * attitude;
+
+        // Dostosowanie orientacji postaci gracza
+        muscleObject.transform.rotation = startingPlayerRotation * relativeRotation;
+
+        counter++;
+        timer = 0;
+        ChangeText();
+    }
+    void ProcessData3(string data)
+    {
+        (_, _, attitude, _) = converter.ParseData(data);
+        attitude = rightCoordToUnityCord(attitude);
+        if (first)
+        {
+            startingRotation = muscleObject.transform.rotation;
             relativeRotation = Quaternion.Inverse(attitude) * muscleObject.transform.rotation;
             first = false;
         }
 
         muscleObject.transform.rotation = attitude * relativeRotation;
-        text1.text = attitude.ToString();
+        counter++;
+        timer = 0;
+        ChangeText();
     }
-    void SetupRB()
+    void ChangeText()
     {
-        
-        rb = GetComponent<Rigidbody>();
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        //rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.mass = 1f;
-        //rb.maxAngularVelocity = 20f;
+        text1.color = Color.green;
+        text1.text = sensorName + counter.ToString() + " records";
     }
-    void safe()
+    void ResetText()
     {
-        var accFixed = accelerometer;
-        accFixed.z -= 1.02f;
-        accFixed.x += 0.01f;
-        counter += accFixed;
-        text1.text = (counter.ToString());
-
-        counter += accFixed;
-        text2.text = (accFixed.ToString());
-        //text1.text = (accFixed.ToString());
-        rb.AddForce(accFixed, ForceMode.Acceleration);
+        text1.color = Color.red;
+        text1.text = sensorName + "sensor disconnected or on screensaver mode";
     }
-    void SaveFirstData(Vector3 data)
+    public void ResetRotiation()
     {
-        FirstData = data;
-        first = false;
+        relativeRotation = Quaternion.Inverse(attitude) * startingRotation;
     }
 }
