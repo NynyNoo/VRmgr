@@ -70,10 +70,25 @@ public class MoveController : MonoBehaviour
         }
     }
 
-    private Quaternion rightCoordToUnityCord( Quaternion q)
+    private Quaternion rightCoordToUnityCord2( Quaternion q)
     {
         //ustawienie orientacji telefonu wzglêdem nogi
         return new Quaternion(-q.y, q.x, -q.z, -q.w);
+    }
+    private Quaternion rightCoordToUnityCord(Quaternion q)
+    {
+        //ustawienie orientacji telefonu wzglêdem nogi
+        //return new Quaternion(q.x, -q.z, q.y, q.w);
+
+        //Debug.Log("x="+-q.y+"y="+q.x+"z="+-q.z+"w="+ -q.w);
+
+        //return new Quaternion(q.x, -q.z, q.y, -q.w);//tylko na prawo
+        Quaternion originalRotation = new Quaternion(q.x, q.y, q.z, q.w);
+        // Tworzenie quaternionu reprezentuj¹cego rotacjê wokó³ osi Y o przeciwny k¹t
+        Quaternion inverseYRotation = Quaternion.Euler(0, 0, 180);
+        // Mno¿enie oryginalnego quaternionu przez odwrotnoœæ rotacji w osi Y
+        Quaternion adjustedRotation = originalRotation * inverseYRotation;
+        return adjustedRotation;
     }
     void ProcessData(string data)
     {

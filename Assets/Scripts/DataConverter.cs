@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class DataConverter : MonoBehaviour
+public class DataConverter
 {
     /*public (Vector3, Vector3, DateTime) ParseData(string dataString)
     {
