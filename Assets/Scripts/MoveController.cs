@@ -31,6 +31,7 @@ public class MoveController : MonoBehaviour
         dataConnector = GetComponent<DataConnector>();
         converter = new DataConverter();
         Subscribe(portNumber);
+        startingRotation = muscleObject.transform.rotation;
     }
 
     void Update()
@@ -74,11 +75,6 @@ public class MoveController : MonoBehaviour
         //ustawienie orientacji telefonu wzglêdem nogi
         return new Quaternion(-q.y, q.x, -q.z, -q.w);
     }
-    private Quaternion rightCoordToUnityCord3(Quaternion q)
-    {
-        //ustawienie orientacji telefonu wzglêdem nogi
-        return new Quaternion(-q.x, q.z, -q.y, -q.w);
-    }
     void ProcessData(string data)
     {
         (_, _, attitude, _) = converter.ParseData(data);
@@ -87,32 +83,16 @@ public class MoveController : MonoBehaviour
         if (first)
         {
             startingPhoneRotation = attitude;
+            muscleObject.transform.rotation = startingRotation;
             startingPlayerRotation = muscleObject.transform.rotation;
             first = false;
         }
 
-        // Obliczenie ró¿nicy miêdzy pocz¹tkow¹ orientacj¹ telefonu a aktualn¹ orientacj¹
         Quaternion relativeRotation = Quaternion.Inverse(startingPhoneRotation) * attitude;
 
         // Dostosowanie orientacji postaci gracza
         muscleObject.transform.rotation = startingPlayerRotation * relativeRotation;
 
-        counter++;
-        timer = 0;
-        ChangeText();
-    }
-    void ProcessData3(string data)
-    {
-        (_, _, attitude, _) = converter.ParseData(data);
-        attitude = rightCoordToUnityCord(attitude);
-        if (first)
-        {
-            startingRotation = muscleObject.transform.rotation;
-            relativeRotation = Quaternion.Inverse(attitude) * muscleObject.transform.rotation;
-            first = false;
-        }
-
-        muscleObject.transform.rotation = attitude * relativeRotation;
         counter++;
         timer = 0;
         ChangeText();
@@ -129,6 +109,6 @@ public class MoveController : MonoBehaviour
     }
     public void ResetRotiation()
     {
-        relativeRotation = Quaternion.Inverse(attitude) * startingRotation;
+        first = true;
     }
 }
