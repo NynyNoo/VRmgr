@@ -94,10 +94,15 @@ public class SoccerScript : MonoBehaviour
     }
     public void StartStopGame()
     {
-        if (gameRunning == true)
+        if (gameRunning == false)
+        { 
             ButtonText.text = "Stop Game";
+            gameRunning = true;
+        }
         else
+        {
             ButtonText.text = "Start Game";
-        gameRunning = !gameRunning;
-    }
+            gameRunning = false;
+        }
+}
 }

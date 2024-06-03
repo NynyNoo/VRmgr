@@ -75,7 +75,7 @@ public class MoveController : MonoBehaviour
         //ustawienie orientacji telefonu wzglêdem nogi
         return new Quaternion(-q.y, q.x, -q.z, -q.w);
     }
-    private Quaternion rightCoordToUnityCord(Quaternion q)
+    private Quaternion rightCoordToUnityCord4(Quaternion q)
     {
         //ustawienie orientacji telefonu wzglêdem nogi
         //return new Quaternion(q.x, -q.z, q.y, q.w);
@@ -89,6 +89,16 @@ public class MoveController : MonoBehaviour
         // Mno¿enie oryginalnego quaternionu przez odwrotnoœæ rotacji w osi Y
         Quaternion adjustedRotation = originalRotation * inverseYRotation;
         return adjustedRotation;
+    }
+    private Quaternion rightCoordToUnityCord(Quaternion q)
+    {
+        Quaternion originalRotation = new Quaternion(q.x, q.y, q.z, q.w);
+
+        // Quaternion reprezentuj¹cy rotacjê o 180 stopni wokó³ osi Y
+        Quaternion yRotation180 = new Quaternion(0, 0, 1, 0);
+
+        // Mno¿enie oryginalnego quaternionu przez rotacjê wokó³ osi Y
+        return originalRotation * yRotation180;
     }
     void ProcessData(string data)
     {
