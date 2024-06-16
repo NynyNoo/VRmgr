@@ -12,12 +12,17 @@ public class MoveController : MonoBehaviour
 {
     [SerializeField] int portNumber;
     [SerializeField] TextMeshProUGUI text1;
+    [SerializeField] TextMeshProUGUI lostDataText;
     [SerializeField] GameObject muscleObject;
     DataConnector dataConnector;
+    int toleranceMs;
     int counter;
     DataConverter converter;
     Quaternion attitude;
     Quaternion relativeRotation;
+    DateTime oldDate;
+    DateTime newDate;
+    int lostDataAmount=0;
     bool first = true;
     string sensorName;
     float timer = 0.0f;
@@ -102,7 +107,9 @@ public class MoveController : MonoBehaviour
     }
     void ProcessData(string data)
     {
-        (_, _, attitude, _) = converter.ParseData(data);
+
+        (_, _, attitude, newDate) = converter.ParseData(data);
+        
         attitude = rightCoordToUnityCord(attitude);
 
         if (first)
@@ -112,7 +119,8 @@ public class MoveController : MonoBehaviour
             startingPlayerRotation = muscleObject.transform.rotation;
             first = false;
         }
-
+        else
+            CheckDate(oldDate, newDate);
         Quaternion relativeRotation = Quaternion.Inverse(startingPhoneRotation) * attitude;
 
         // Dostosowanie orientacji postaci gracza
@@ -120,7 +128,17 @@ public class MoveController : MonoBehaviour
 
         counter++;
         timer = 0;
+        oldDate = newDate;
         ChangeText();
+    }
+    void CheckDate(DateTime oldDate, DateTime newDate)
+    {
+        var timeDifference = (newDate - oldDate).TotalMilliseconds;
+        if (Math.Abs(timeDifference) > toleranceMs)
+        {
+            lostDataAmount++;
+            lostDataText.text = lostDataAmount.ToString() +" Missing Data";
+        }
     }
     void ChangeText()
     {

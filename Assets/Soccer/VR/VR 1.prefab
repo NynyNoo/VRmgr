@@ -6261,6 +6261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portNumber: 12348
   text1: {fileID: 946585817060053112}
+  lostDataText: {fileID: 0}
   muscleObject: {fileID: 7741266928660511558}
 --- !u!1 &5403830333043861380
 GameObject:
@@ -6704,6 +6705,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portNumber: 12347
   text1: {fileID: 5176746794780362221}
+  lostDataText: {fileID: 0}
   muscleObject: {fileID: 3875556393042705467}
 --- !u!1 &5768733381626668064
 GameObject:
@@ -7335,6 +7337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portNumber: 12345
   text1: {fileID: 5260074430845751244}
+  lostDataText: {fileID: 0}
   muscleObject: {fileID: 6029826236097787411}
 --- !u!1 &6361610402131841618
 GameObject:
@@ -8107,6 +8110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portNumber: 12346
   text1: {fileID: 8501565822423817994}
+  lostDataText: {fileID: 0}
   muscleObject: {fileID: 5272392307317995324}
 --- !u!1 &7310823670029346403
 GameObject:
