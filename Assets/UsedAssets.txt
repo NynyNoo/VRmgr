@@ -1,0 +1,27 @@
+All assets used in project are free to use
+
+SkyBox
+https://assetstore.unity.com/packages/2d/textures-materials/sky/free-stylized-skybox-212257#description
+From free unity asset store
+Author:
+Yuki2022
+
+
+Low Polygon Soccer Ball
+https://assetstore.unity.com/packages/3d/low-polygon-soccer-ball-84382
+From free unity asset store
+Author:
+Ahmet Gencoglu
+
+Nature Materials vol.1 for grass texture
+https://assetstore.unity.com/packages/2d/textures-materials/nature/nature-materials-vol-1-21113
+From free unity asset store
+Author:
+swG2
+
+
+3D Character Dummy
+https://assetstore.unity.com/packages/3d/characters/humanoids/humans/3d-character-dummy-178395
+From free unity asset store
+Author:
+Kevin Iglesias
