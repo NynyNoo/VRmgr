@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VRTemplate;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
