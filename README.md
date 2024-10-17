@@ -1,8 +1,12 @@
 
 PROJEKT ZASTOSOWANIA CZUJNIKÓW DO ODWZOROWANIA RUCHU KOŃCZYN DOLNYCH DLA ŚRODOWISKA WIRTUALNEJ RZECZYWISTOŚCI
 
-![image](https://github.com/user-attachments/assets/7396b9f9-72bd-4407-9ecf-a906f948e43d)
-![image](https://github.com/user-attachments/assets/c11ba403-9960-4b56-ab37-7ac5dfa51135)
+![image](https://github.com/user-attachments/assets/028b8f97-9283-49d7-aabe-b2d0a844d27f)
+
+![image](https://github.com/user-attachments/assets/937ae8e7-77fc-4570-95a9-1ca2a3970b05)
+
+
+
 
 Aplikacja komputerowa do Pracu magisterskiej 
 opracowana przez Szymona Białek 
